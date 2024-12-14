@@ -13,12 +13,18 @@ router = Router()
 
 @router.message(Command("start"))
 async def start_handler(msg: Message, state: FSMContext):
-    await msg.answer("Привет! Я твой помощник в КнАГУ.  Ты можешь ко мне обращаться когда нужно, я помогу тебе подготовиться к сессии, автоматически отправляю расписание и многое другое....")
-    await msg.answer("Давай зарегистрируемся! Для начала, выбери год поступления в ВУЗ", reply_markup=keyboard_years)
+    """Начать"""
+    user_id = str(msg.from_user.id)
+    if not(check_user_exists(user_id)):
+        await msg.answer("Привет! Я твой помощник в КнАГУ.  Ты можешь ко мне обращаться когда нужно, я помогу тебе подготовиться к сессии, автоматически отправляю расписание и многое другое....")
+        await msg.answer("Давай зарегистрируемся! Для начала, выбери год поступления в ВУЗ", reply_markup=keyboard_years)
+    else:
+        await msg.answer("Привет! Ты уже зарегистрирован")
 
 
 @router.callback_query(lambda c: c.data and c.data.startswith('year_'))
 async def process_year_callback(callback_query: CallbackQuery):
+    """Выбираем год начала обучения"""
     year = callback_query.data.split('_')[1]
     groups = get_groups(year)
     keyboard_groups = create_groups_keyboard(groups)
@@ -29,7 +35,9 @@ async def process_year_callback(callback_query: CallbackQuery):
 
 
 @router.callback_query(lambda c: c.data and c.data.startswith('group_'))
+
 async def process_year_callback(callback_query: CallbackQuery, state: FSMContext):
+    """Выбираем группу"""
     user_id = str(callback_query.from_user.id)
     name = str(callback_query.from_user.first_name)
     group = str(callback_query.data.split('_')[1])

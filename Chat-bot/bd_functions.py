@@ -1,3 +1,4 @@
+from auth.models import Student
 from db import *
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
@@ -39,7 +40,11 @@ def get_uuid_group(group:str):
         session.close()
         return result
 
-
+def check_user_exists(tg_id: str):
+    with Session_chat(autoflush=False, bind=engine) as session:
+        query = select(Student).where(Student.tg_id == tg_id)
+        result = session.execute(query).scalar_one_or_none()
+        return bool(result)
 
 
 
