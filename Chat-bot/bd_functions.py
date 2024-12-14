@@ -19,6 +19,27 @@ def get_unique_years():
         query = select(distinct(Group.created_at)).order_by(Group.created_at.desc())
         result = session.execute(query)
         years = result.scalars().all()
+        session.close()
         return years
 
-print(get_unique_years())
+
+def get_groups(year:str):
+    with Session_chat(autoflush=False, bind=engine) as session:
+        query = select(Group.name).where(Group.created_at == year)
+        result = session.execute(query)
+        group_names = [row[0] for row in result.all()]
+        session.close()
+        return group_names
+
+
+def get_uuid_group(group:str):
+    with Session_chat(autoflush=False, bind=engine) as session:
+        query = select(Group.code).where(Group.name == group)
+        result = session.execute(query)
+        session.close()
+        return result
+
+
+
+
+

@@ -36,19 +36,22 @@ def get_db():
 class StudentRegistration(BaseModel):
     tg_id: str
     name: str
-    group: str
+    group_uuid: str
 
-@app.post("/auth")
+@app.post("/register")
 async def create_student(student: StudentRegistration, db: Session = Depends(get_db)):
     try:
         new_student = Student(
             tg_id=student.tg_id,
             name=student.name,
-            group=student.group
+            group_uuid=student.group_uuid
         )
         db.add(new_student)
         db.commit()
-        return {"message": "Student added successfully"}
+        return JSONResponse(
+            status_code=200,
+            content={"message": f"Succesfully"}
+        )
     except Exception as e:
         db.rollback()
         logging.error(f"Error creating student: {str(e)}")
@@ -56,3 +59,4 @@ async def create_student(student: StudentRegistration, db: Session = Depends(get
             status_code=500,
             content={"message": f"Error creating student: {str(e)}"}
         )
+
