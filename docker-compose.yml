@@ -1,0 +1,18 @@
+
+
+services:
+  auth:
+    build:
+      context: ./auth
+
+  Chat-bot:
+    build:
+      context: ./Chat-bot
+
+  lessons:
+    build:
+      context: ./lessons
+
+  Sheduler:
+    build:
+      context: ./Sheduler
