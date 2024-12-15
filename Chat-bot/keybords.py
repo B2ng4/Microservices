@@ -2,6 +2,7 @@ from tokenize import group
 
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from aiogram.filters.callback_data import CallbackData
 from bd_functions import get_unique_years  #
 
 
@@ -33,3 +34,29 @@ def create_functions_keyboard():
         keyboard=[[btn1, btn2]],
         resize_keyboard=True
     )
+
+
+class PaginationCD(CallbackData, prefix="page"):
+    action: str
+    page: int
+
+def create_pagination_keyboard(page: int, pages_count: int) -> InlineKeyboardMarkup:
+    keyboard = []
+
+    buttons = []
+    if page > 0:
+        buttons.append(InlineKeyboardButton(
+            text="⬅️",
+            callback_data=PaginationCD(action="prev", page=page).pack()
+        ))
+
+    buttons.append(InlineKeyboardButton(
+        text=f"{page + 1}/{pages_count}",
+        callback_data="ignore"
+    ))
+
+    if page < pages_count - 1:
+        buttons.append(InlineKeyboardButton(
+            text="➡️",
+            callback_data=PaginationCD(action="next", page=page).pack()
+        ))
