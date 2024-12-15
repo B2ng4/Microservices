@@ -24,9 +24,9 @@ const Group = sequelize.define("Группы", {
     timestamps: false
 });
 
-async function getUidGroup(nameGroup) {
+async function getUidGroup(codeGroup) {
     try {
-        const group = await Group.findOne({ where: { name: nameGroup } });
+        const group = await Group.findOne({ where: { code: codeGroup } });
         if (!group) {
             console.log('Группа не найдена');
             return null; 
@@ -38,4 +38,18 @@ async function getUidGroup(nameGroup) {
     }
 }
 
-module.exports = getUidGroup;
+async function getYearGroup(codeGroup) {
+    try {
+        const group = await Group.findOne({ where: { code: codeGroup } });
+        if (!group) {
+            console.log('Год группы не найдена');
+            return null; 
+        }
+        return group.created_at;
+    } catch (error) {
+        console.error('Ошибка при получении группы:', error); 
+        throw error; 
+    }
+}
+
+module.exports = { getUidGroup, getYearGroup };
