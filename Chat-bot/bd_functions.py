@@ -33,12 +33,14 @@ def get_groups(year:str):
         return group_names
 
 
-def get_uuid_group(group:str):
-    with Session_chat(autoflush=False, bind=engine) as session:
+def get_uuid_group(group: str):
+    with Session(autoflush=False, bind=engine) as session:
         query = select(Group.code).where(Group.name == group)
-        result = session.execute(query)
+        result = session.execute(query).scalars().all()[0]  # Изменено здесь
+        print(result)
         session.close()
         return result
+
 
 def check_user_exists(tg_id: str):
     with Session_chat(autoflush=False, bind=engine) as session:
