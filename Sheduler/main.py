@@ -28,7 +28,8 @@ app.add_middleware(
 @app.get("/get_shedule")
 async def get_sheduler(group_uuid: str):
 
-    shedule_on_week = (parse_shedule_on_week(group_uuid))
+    shedule_on_week = parse_shedule_on_week(group_uuid)
+    print(shedule_on_week)
     return shedule_on_week
 
 

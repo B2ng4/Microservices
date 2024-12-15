@@ -39,6 +39,7 @@ def create_functions_keyboard():
 
 def shedule_keyboard(schedule):
     keyboard = InlineKeyboardBuilder()
+
     for day in schedule.keys():
         keyboard.button(text=day, callback_data=f"schedule_{day}")
 

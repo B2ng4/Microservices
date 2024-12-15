@@ -1,15 +1,14 @@
 import requests
 from bs4 import BeautifulSoup
 import re
-from datetime import datetime,timedelta
+from datetime import datetime, timedelta
 
 
-def parse_shedule_on_week(group:str):
+def parse_shedule_on_week(group: str):
     day = datetime.now()
     current_weekday = day.weekday()
     days_to_monday = (7 - current_weekday) % 7
     monday_date = day + timedelta(days=days_to_monday)
-    # Форматируем дату в нужный формат
     formatted_monday = monday_date.strftime('%d.%m.%Y')
 
     url = f"https://knastu.ru/students/schedule/{group}?form=0&type=0&day={formatted_monday}&simple=0"
@@ -21,7 +20,6 @@ def parse_shedule_on_week(group:str):
     rows = table.find_all('tr', recursive=False)
 
     days = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"]
-
     shedule_on_week = {}
 
     def extract_lesson_data(cell):
@@ -50,10 +48,12 @@ def parse_shedule_on_week(group:str):
         for i, cell in enumerate(cells[1:], start=1):
             lesson_info = extract_lesson_data(cell)
 
-            day = days[i - 1]
-            if day not in shedule_on_week:
-                shedule_on_week[day] = []
-            shedule_on_week[day].append(lesson_info)
+            day_date = (monday_date + timedelta(days=i - 1)).strftime('%d.%m')
+            day_with_date = f"{days[i - 1]} {day_date}"
+
+            if day_with_date not in shedule_on_week:
+                shedule_on_week[day_with_date] = []
+            shedule_on_week[day_with_date].append(lesson_info)
 
     return shedule_on_week
 
