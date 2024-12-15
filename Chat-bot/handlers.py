@@ -65,19 +65,62 @@ async def process_year_callback(callback_query: CallbackQuery):
         await callback_query.answer()
 
 
-@router.message(lambda message: message.text == "Получить расписание 📅")
-async def request_text(message: Message):
-    group_uuid = get_user_uuid_group (str(message.from_user.id))
+@router.message(lambda message: message.text == "расписание на неделю 📅")
+async def show_week_schedule(message: Message):
+    group_uuid = get_user_uuid_group(str(message.from_user.id))
     schedule = shedule(group_uuid)
-    for day, lessons in schedule.items():
-        text = f"<b> Расписание на  ({day})</b>\n\n"
+
+    keyboard = shedule_keyboard(schedule)
+    await message.answer(
+        text="Выберите день недели, чтобы увидеть расписание:",
+        reply_markup=keyboard.as_markup()
+    )
+
+
+@router.callback_query(lambda c: c.data and c.data.startswith('schedule_'))
+async def show_day_schedule(callback_query: CallbackQuery):
+    group_uuid = get_user_uuid_group(str(callback_query.from_user.id))
+    schedule = shedule(group_uuid)
+    day = callback_query.data.split('_')[1]
+
+    if day not in schedule:
+        await callback_query.answer("Расписание для этого дня не найдено!", show_alert=True)
+        return
+
+    lessons = schedule[day]
+    text = f"<b>Расписание на {day}:</b>\n\n"
+    if not lessons:
+        text += "  <i>Нет занятий</i>\n"
+    else:
         for i, lesson in enumerate(lessons, 1):
             if lesson['Предмет'] == "-":
                 continue
-            else:
-                text += f"    <i>{digits[i - 1]} {pair_times[i - 1]}.\n    <b>{lesson['Предмет']}</b>: {lesson['Тип занятия']}</i>\n"
-                text += f"    <i>Преподаватель: {lesson['Преподаватель']}</i>\n"
-                text += f"    <i>Аудитория: {lesson['Аудитория']}</i>\n\n"
+            text += f"    <i>{digits[i - 1]} {pair_times[i - 1]}.\n    <b>{lesson['Предмет']}</b>: {lesson['Тип занятия']}</i>\n"
+            text += f"    <i>Преподаватель: {lesson['Преподаватель']}</i>\n"
+            text += f"    <i>Аудитория: {lesson['Аудитория']}</i>\n\n"
 
-        await message.answer(text=text, parse_mode="HTML")
-        break
+    await callback_query.message.edit_text(
+        text=text,
+        parse_mode="HTML",
+        reply_markup=callback_query.message.reply_markup
+    )
+    await callback_query.answer()
+
+
+@router.message(lambda message: message.text == "Авто-расписание ⌚️")
+async def set_auto_shedule(message: Message):
+    keyboard_auto = create_auto_keyboard()
+    await message.answer("<b>Настройка автоматической отправки расписания</b> \n Если включить, бот будет отправлять расписание на день в 6 утра", reply_markup=keyboard_auto)
+
+
+@router.callback_query(lambda c: c.data == "auto_on")
+async def enable_auto_schedule(callback_query: CallbackQuery):
+    func_keyboard = create_functions_keyboard()
+    await callback_query.message.edit_text(
+        "<b>Авто-расписание включено ✅</b>\n\n"
+        "Бот будет автоматически отправлять расписание каждый день в 6 утра.\n"
+        "Вы можете отключить эту функцию в любое время.",
+        parse_mode="HTML"
+    )
+    await callback_query.answer("Авто-расписание включено!")
+

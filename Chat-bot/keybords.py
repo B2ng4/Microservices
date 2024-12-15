@@ -1,6 +1,7 @@
 from tokenize import group
 
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.filters.callback_data import CallbackData
 from bd_functions import get_unique_years  #
@@ -27,36 +28,26 @@ def create_groups_keyboard(groups, buttons_per_row=3):
 
 
 def create_functions_keyboard():
-    btn1 = KeyboardButton(text='Получить расписание 📅')
-    btn2 = KeyboardButton(text='Рекомендации на текущую сессию 🔑')
+    btn1 = KeyboardButton(text='расписание на неделю 📅')
+    btn2 = KeyboardButton(text='Авто-расписание ⌚️')
+    btn3 = KeyboardButton(text='Рекомендации на текущую сессию 🔑')
 
     return ReplyKeyboardMarkup(
-        keyboard=[[btn1, btn2]],
+        keyboard=[[btn1, btn2, btn3]],
         resize_keyboard=True
     )
 
+def shedule_keyboard(schedule):
+    keyboard = InlineKeyboardBuilder()
+    for day in schedule.keys():
+        keyboard.button(text=day, callback_data=f"schedule_{day}")
 
-class PaginationCD(CallbackData, prefix="page"):
-    action: str
-    page: int
 
-def create_pagination_keyboard(page: int, pages_count: int) -> InlineKeyboardMarkup:
-    keyboard = []
+    keyboard.adjust(3)
+    return keyboard
 
-    buttons = []
-    if page > 0:
-        buttons.append(InlineKeyboardButton(
-            text="⬅️",
-            callback_data=PaginationCD(action="prev", page=page).pack()
-        ))
 
-    buttons.append(InlineKeyboardButton(
-        text=f"{page + 1}/{pages_count}",
-        callback_data="ignore"
-    ))
 
-    if page < pages_count - 1:
-        buttons.append(InlineKeyboardButton(
-            text="➡️",
-            callback_data=PaginationCD(action="next", page=page).pack()
-        ))
+def create_auto_keyboard():
+    btn1 = InlineKeyboardButton(text="Включить", callback_data="auto_on")
+    return InlineKeyboardMarkup(inline_keyboard=[[btn1]])

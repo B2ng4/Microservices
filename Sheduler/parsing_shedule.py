@@ -5,13 +5,13 @@ from datetime import datetime,timedelta
 
 
 def parse_shedule_on_week(group:str):
-    print(group)
     day = datetime.now()
     current_weekday = day.weekday()
     days_to_monday = (7 - current_weekday) % 7
     monday_date = day + timedelta(days=days_to_monday)
     # Форматируем дату в нужный формат
     formatted_monday = monday_date.strftime('%d.%m.%Y')
+
     url = f"https://knastu.ru/students/schedule/{group}?form=0&type=0&day={formatted_monday}&simple=0"
 
     response = requests.get(url)
