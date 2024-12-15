@@ -48,4 +48,10 @@ def check_user_exists(tg_id: str):
         return bool(result)
 
 
+def get_user_uuid_group(tg_id:str):
+    with Session_chat(autoflush=False, bind=engine) as session:
+        query = select(Student.group_uuid).where(Student.tg_id == tg_id)
+        result = session.execute(query).scalar_one_or_none()
+        print(result)
+        return result
 
