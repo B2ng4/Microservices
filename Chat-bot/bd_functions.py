@@ -37,7 +37,6 @@ def get_uuid_group(group: str):
     with Session(autoflush=False, bind=engine) as session:
         query = select(Group.code).where(Group.name == group)
         result = session.execute(query).scalars().all()[0]  # Изменено здесь
-        print(result)
         session.close()
         return result
 
