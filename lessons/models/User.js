@@ -11,7 +11,7 @@ const Studens = sequelize.define("Студенты", {
         type: Sequelize.STRING,
         allowNull: false
     },
-    group: {
+    group_uuid: {
         type: Sequelize.STRING,
         allowNull: false
     }
@@ -27,7 +27,7 @@ async function getGroupUser(id) {
             console.log('Студент не найден');
             return null; 
         }
-        return user.group; 
+        return user.group_uuid; 
     } catch (error) {
         console.error('Ошибка при получении группы:', error); 
         throw error; 

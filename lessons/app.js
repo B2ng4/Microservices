@@ -1,9 +1,31 @@
-const express = require("express")
+const express = require("express");
+const Lessons = require('./controllers/Lessons'); 
+const bodyParser = require('body-parser');
 
-const app = express()
+const app = express();
 
-app.get("/get/lessons", function(request, response){
-    response.send("")
-})
+app.use(bodyParser.json()); 
 
-app.listen(3000);
+app.post("/post/lessons", async function(request, response) {
+    const userTelegramId = request.body.userTelegramId;
+
+    if (!userTelegramId) {
+        return response.status(400).send("userTelegramId is required");
+    }
+
+    try {
+        const lessonsData = await Lessons(userTelegramId);
+        if (lessonsData) {
+            response.json(lessonsData);
+        } else {
+            response.status(404).send("No lessons found for the specified user.");
+        }
+    } catch (error) {
+        console.error('Error fetching lessons:', error);
+        response.status(500).send("Internal server error");
+    }
+});
+
+app.listen(3000, () => {
+    console.log(`Server is running on port ${3000}`);
+});
