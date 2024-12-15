@@ -42,7 +42,7 @@ async def process_year_callback(callback_query: CallbackQuery, state: FSMContext
     user_id = str(callback_query.from_user.id)
     name = str(callback_query.from_user.first_name)
     group = str(callback_query.data.split('_')[1])
-    group_uuid = str(get_uuid_group(group)[0]) #Получаем первое значение
+    group_uuid = str(get_uuid_group(group)) #Получаем первое значение
     keyboard_func = create_functions_keyboard() # Теперь используем обычную клавиатуру
     if register(user_id, name, group_uuid):
         await callback_query.message.edit_text(
