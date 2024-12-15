@@ -26,9 +26,8 @@ app.add_middleware(
 
 
 @app.get("/get_shedule")
-async def get_shedule(group_uuid: str):  # Параметр будет передан через URL
-    # Здесь ваш код для обработки group_uuid
-    print(group_uuid)
+async def get_sheduler(group_uuid: str):
+
     shedule_on_week = (parse_shedule_on_week(group_uuid))
     return shedule_on_week
 

@@ -1,7 +1,7 @@
 import requests
 
 def shedule(group:str):
-    url = f'http://127.0.0.1:8004/get_shedule?group_uuid={group}'
+    url = f'http://127.0.0.1:8002/get_shedule?group_uuid={group}'
     response = requests.get(url)
 
     if response.status_code == 200:
@@ -10,3 +10,5 @@ def shedule(group:str):
     else:
         print(f"Ошибка: {response.status_code}")
         return None
+
+

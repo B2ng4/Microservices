@@ -33,7 +33,7 @@ def create_functions_keyboard():
     btn3 = KeyboardButton(text='Рекомендации на текущую сессию 🔑')
 
     return ReplyKeyboardMarkup(
-        keyboard=[[btn1, btn2, btn3]],
+        keyboard=[[btn1], [btn2], [btn3]],
         resize_keyboard=True
     )
 
@@ -43,11 +43,21 @@ def shedule_keyboard(schedule):
         keyboard.button(text=day, callback_data=f"schedule_{day}")
 
 
-    keyboard.adjust(3)
+    keyboard.adjust(2)
     return keyboard
-
-
 
 def create_auto_keyboard():
     btn1 = InlineKeyboardButton(text="Включить", callback_data="auto_on")
     return InlineKeyboardMarkup(inline_keyboard=[[btn1]])
+
+
+def create_disciplins_keyboard(disciplins):
+    disc_buttons = [
+        InlineKeyboardButton(
+            text="📍"+disciplin,
+            callback_data=f"dis_{i}"
+        )
+        for i, disciplin in enumerate(disciplins)
+    ]
+
+    return InlineKeyboardMarkup(inline_keyboard=[[button] for button in disc_buttons])

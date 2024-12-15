@@ -6,6 +6,7 @@ from aiogram.types import CallbackQuery
 from bd_functions import *
 from api_Requests.reg import register
 from api_Requests.get_shedule import shedule
+from api_Requests.get_lessons import lessons
 from add_data import *
 from keybords import *
 
@@ -123,4 +124,22 @@ async def enable_auto_schedule(callback_query: CallbackQuery):
         parse_mode="HTML"
     )
     await callback_query.answer("Авто-расписание включено!")
+
+
+
+@router.message(lambda message: message.text == "Рекомендации на текущую сессию 🔑")
+async def set_disciplines(message: Message):
+    disciplins = lessons(str(message.from_user.id))
+    discipline_list = disciplins[0]["Дисциплины"]
+
+    disc_keyboard = create_disciplins_keyboard(discipline_list)
+
+    await message.answer(
+        text="Выбери предмет, по которому у тебя возникают проблемы",
+        reply_markup=disc_keyboard
+    )
+
+
+
+
 
