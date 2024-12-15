@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.21.2",
+    "gigachat-node": "^2.1.4",
     "pg": "^8.13.1",
     "puppeteer": "^23.10.4",
     "sequelize": "^6.37.5"
