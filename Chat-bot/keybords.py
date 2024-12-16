@@ -62,3 +62,9 @@ def create_disciplins_keyboard(disciplins):
     ]
 
     return InlineKeyboardMarkup(inline_keyboard=[[button] for button in disc_buttons])
+
+
+def create_recomendation_keyboard():
+    btn1 = InlineKeyboardButton(text="Получить обучающую литературу", callback_data="literature")
+    btn2 = InlineKeyboardButton(text="Рекомендовать видео-лекции", callback_data="video")
+    return InlineKeyboardMarkup(inline_keyboard=[[btn1],[btn2]])

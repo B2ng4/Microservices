@@ -142,7 +142,8 @@ async def set_disciplines(message: Message):
 @router.callback_query(lambda c: c.data and c.data.startswith('dis_'))
 async def get_subject(callback_query: CallbackQuery):
     discioline = callback_query.data.split('_')[1]
-    await callback_query.message.edit_text(f"Выбран предмет: {discioline}",parse_mode="HTML")
+    recomend_keyboard = create_recomendation_keyboard()
+    await callback_query.message.edit_text(f"Выбран предмет: {discioline}",parse_mode="HTML", reply_markup=recomend_keyboard)
 
 
 
