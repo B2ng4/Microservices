@@ -27,7 +27,7 @@ app.add_middleware(
 
 
 @app.get("/get_video_urls")
-def get_sheduler(discipline: str):
+def get_videos(discipline: str):
     urls = search_videos_by_discipline(discipline)
     return JSONResponse(content={"videos": urls})
 

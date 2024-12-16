@@ -10,5 +10,3 @@ def video_urls(discipline:str):
         print(f"Ошибка: {response.status_code}")
         return None
 
-
-print(video_urls("Матанализ"))
