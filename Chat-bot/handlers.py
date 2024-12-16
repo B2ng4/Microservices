@@ -9,6 +9,7 @@ from api_Requests.reg import register
 from api_Requests.get_shedule import shedule
 from api_Requests.get_lessons import lessons
 from api_Requests.get_videos import video_urls
+from api_Requests.get_book import book
 from add_data import *
 from keybords import *
 from aiogram.fsm.context import FSMContext
@@ -167,4 +168,23 @@ async def get_subject(callback_query: CallbackQuery, state: FSMContext, bot: Bot
             parse_mode="HTML"
         )
 
+@router.callback_query(lambda c: c.data == "book")
+async def get_subject(callback_query: CallbackQuery, state: FSMContext, bot: Bot):
+    data = await state.get_data()
+    discipline = data.get("selected_discipline")
+    urls = book(discipline)
+    print(urls)
+
+    for url in urls["Ссылка"]:
+        for name in urls['Название']:
+            await bot.send_message(
+                chat_id=callback_query.message.chat.id,
+                text=url,
+                parse_mode="HTML"
+            )
+            await bot.send_message(
+                chat_id=callback_query.message.chat.id,
+                text=name,
+                parse_mode="HTML"
+            )
 
