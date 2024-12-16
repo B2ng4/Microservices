@@ -168,23 +168,19 @@ async def get_subject(callback_query: CallbackQuery, state: FSMContext, bot: Bot
             parse_mode="HTML"
         )
 
-@router.callback_query(lambda c: c.data == "book")
+@router.callback_query(lambda c: c.data == "literature")
 async def get_subject(callback_query: CallbackQuery, state: FSMContext, bot: Bot):
     data = await state.get_data()
     discipline = data.get("selected_discipline")
     urls = book(discipline)
     print(urls)
 
-    for url in urls["Ссылка"]:
-        for name in urls['Название']:
+    for url in urls:
             await bot.send_message(
                 chat_id=callback_query.message.chat.id,
-                text=url,
+                text=f"📍 <b>{url['Название']}</b>\n"
+                     f"https://openlibrary.org+{url['Ссылка']}",
                 parse_mode="HTML"
             )
-            await bot.send_message(
-                chat_id=callback_query.message.chat.id,
-                text=name,
-                parse_mode="HTML"
-            )
+
 

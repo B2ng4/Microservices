@@ -9,4 +9,3 @@ def video_urls(discipline:str):
     else:
         print(f"Ошибка: {response.status_code}")
         return None
-
