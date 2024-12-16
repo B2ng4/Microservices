@@ -7,6 +7,10 @@ const app = express();
 
 app.use(bodyParser.json()); 
 
+app.get("/", function(req, res){
+    res.send("Сервис Дисциплин")
+})
+
 app.post("/post/lessons", async function(request, response) {
     const userTelegramId = request.body.userTelegramId;
 
