@@ -56,7 +56,7 @@ def create_disciplins_keyboard(disciplins):
     disc_buttons = [
         InlineKeyboardButton(
             text="📍"+disciplin,
-            callback_data=f"dis_{i}"
+            callback_data=f"dis_{disciplin[:30]}"  # Укороченный текст
         )
         for i, disciplin in enumerate(disciplins)
     ]
