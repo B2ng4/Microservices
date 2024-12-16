@@ -1,4 +1,5 @@
 from aiogram import Router
+from aiogram import Bot
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from aiogram.filters import Command
@@ -7,8 +8,12 @@ from bd_functions import *
 from api_Requests.reg import register
 from api_Requests.get_shedule import shedule
 from api_Requests.get_lessons import lessons
+from api_Requests.get_videos import video_urls
 from add_data import *
 from keybords import *
+from aiogram.fsm.context import FSMContext
+from aiogram.fsm.storage.memory import MemoryStorage
+from aiogram.fsm.state import StatesGroup, State
 
 router = Router()
 
@@ -140,11 +145,26 @@ async def set_disciplines(message: Message):
     )
 
 @router.callback_query(lambda c: c.data and c.data.startswith('dis_'))
-async def get_subject(callback_query: CallbackQuery):
-    discioline = callback_query.data.split('_')[1]
+async def get_subject(callback_query: CallbackQuery, state: FSMContext):
+    discipline = callback_query.data.split('_')[1]
+    await state.update_data(selected_discipline=discipline)
     recomend_keyboard = create_recomendation_keyboard()
-    await callback_query.message.edit_text(f"Выбран предмет: {discioline}",parse_mode="HTML", reply_markup=recomend_keyboard)
+    await callback_query.message.edit_text(f"Выбран предмет: {discipline}",parse_mode="HTML", reply_markup=recomend_keyboard)
 
 
+@router.callback_query(lambda c: c.data == "video")
+async def get_subject(callback_query: CallbackQuery, state: FSMContext, bot: Bot):
+    data = await state.get_data()
+    discipline = data.get("selected_discipline")
+    urls = video_urls(discipline)
+    print(urls)
+
+    # Отправляем обычные сообщения с URL
+    for url in urls["videos"]:
+        await bot.send_message(
+            chat_id=callback_query.message.chat.id,
+            text=url,
+            parse_mode="HTML"
+        )
 
 
