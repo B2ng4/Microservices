@@ -16,3 +16,12 @@ services:
   Sheduler:
     build:
       context: ./Sheduler
+
+  video-search:
+    build:
+      context: ./video-search
+
+
+  book-search:
+    build:
+      context: ./book-search
